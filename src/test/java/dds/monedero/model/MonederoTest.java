@@ -19,7 +19,7 @@ public class MonederoTest {
 
   @Test
   void Poner() {
-    cuenta.poner(1500);
+    cuenta.poner(100);
   }
 
   @Test
