@@ -6,7 +6,9 @@ import dds.monedero.exceptions.MontoNegativoException;
 import dds.monedero.exceptions.SaldoMenorException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import java.util.ArrayList;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class MonederoTest {
@@ -14,28 +16,23 @@ public class MonederoTest {
 
   @BeforeEach
   void init() {
-    cuenta = new Cuenta();
+    cuenta = new Cuenta(0,new ArrayList<>());
   }
 
   @Test
-  void Poner() {
+  void Poner100PesosEnCuentaTest() {
     cuenta.poner(100);
+    assertEquals(100, cuenta.getSaldo());
   }
 
   @Test
-  void PonerMontoNegativo() {
+  void PonerMontoNegativoDaErrorTest() {
     assertThrows(MontoNegativoException.class, () -> cuenta.poner(-1500));
   }
 
-  @Test
-  void TresDepositos() {
-    cuenta.poner(1500);
-    cuenta.poner(456);
-    cuenta.poner(1900);
-  }
 
   @Test
-  void MasDeTresDepositos() {
+  void MasDeTresDepositosDiariosDaErrorTest() {
     assertThrows(MaximaCantidadDepositosException.class, () -> {
           cuenta.poner(1500);
           cuenta.poner(456);

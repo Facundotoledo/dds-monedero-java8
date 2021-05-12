@@ -11,7 +11,7 @@ import java.util.List;
 
 public class Cuenta {
 
-  private double saldo = 0;
+  private double saldo;
   private List<Movimiento> movimientos = new ArrayList<>();
 
   public Cuenta(double montoInicial, List<Movimiento> movimientos) {
@@ -24,8 +24,10 @@ public class Cuenta {
     this.checkeoMontoPositivo(cuanto);
 
     if (movimientos.stream().filter(movimiento -> movimiento.isDeposito()).count() >= 3) {
-      throw new MaximaCantidadDepositosException("Ya excedio los " + 3 + " depositos diarios");
+      throw new MaximaCantidadDepositosException("Ya excedio los 3 depositos diarios");
     }
+
+    saldo += cuanto;
 
     agregarMovimiento(LocalDate.now(), cuanto, true);
   }
@@ -38,9 +40,11 @@ public class Cuenta {
     }
     double limite = 1000 - getMontoExtraidoA(LocalDate.now());;
     if (cuanto > limite) {
-      throw new MaximoExtraccionDiarioException("No puede extraer mas de $ " + 1000
-          + " diarios, límite: " + limite);
+      throw new MaximoExtraccionDiarioException("No puede extraer mas de $1000 diarios, límite: " + limite);
     }
+
+    saldo -= cuanto;
+
     agregarMovimiento(LocalDate.now(), cuanto, false);
   }
 
@@ -50,7 +54,7 @@ public class Cuenta {
 
   public double getMontoExtraidoA(LocalDate fecha) {
     return movimientos.stream()
-        .filter(movimiento -> !movimiento.isDeposito() && movimiento.getFecha().equals(fecha))
+        .filter(movimiento -> movimiento.fueExtraido(fecha))
         .mapToDouble(Movimiento::getMonto)
         .sum();
   }
@@ -65,4 +69,7 @@ public class Cuenta {
     this.saldo = saldo;
   }
 
+  public double getSaldo() {
+    return saldo;
+  }
 }

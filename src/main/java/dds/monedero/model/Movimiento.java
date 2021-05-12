@@ -15,16 +15,12 @@ public class Movimiento {
     this.esDeposito = esDeposito;
   }
 
-  public double getMonto() {
-    return monto;
-  }
-
   public LocalDate getFecha() {
     return fecha;
   }
 
   public boolean fueDepositado(LocalDate fecha) {
-    return isDeposito() && esDeLaFecha(fecha);
+    return esDeposito && esDeLaFecha(fecha);
   }
 
   public boolean fueExtraido(LocalDate fecha) {
@@ -35,20 +31,21 @@ public class Movimiento {
     return this.fecha.equals(fecha);
   }
 
-  public boolean isDeposito() {
-    return esDeposito;
-  }
+  public boolean isDeposito(){ return  esDeposito;};
 
   public boolean isExtraccion() {
     return !esDeposito;
   }
 
+  public double getMonto() {
+    return monto;
+  }
 
   public double calcularValor(Cuenta cuenta) {
     if (esDeposito) {
-      return cuenta.getSaldo() + getMonto();
+      return cuenta.getSaldo() + monto;
     } else {
-      return cuenta.getSaldo() - getMonto();
+      return cuenta.getSaldo() - monto;
     }
   }
 }
